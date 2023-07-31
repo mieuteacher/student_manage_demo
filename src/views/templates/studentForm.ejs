@@ -1,0 +1,20 @@
+<form enctype="multipart/form-data" method="post" action="<%= form.actionUrl %>">
+    <div class="mb-3">
+        <label class="form-label">Student Name</label>
+        <input name="name" type="text" class="form-control" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Student Age</label>
+        <input name="age" type="text" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Student Avatar</label>
+        <input onchange="changeAvatar(event)" name="avatar" type="file" class="form-control">
+        <img id="avatar_preview" style="width: 50px; height: 50px; border-radius: 50%; margin-top: 10px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Student Class</label>
+        <input name="class" type="text" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary"><%= form.submitTitle %></button>
+</form>

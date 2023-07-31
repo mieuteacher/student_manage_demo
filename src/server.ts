@@ -10,6 +10,13 @@ const server = express();
 import viewConfig from './views';
 server.use("/views",viewConfig);
 
+/* Thiết lập body parser */
+import bodyParser from 'body-parser';
+server.use(bodyParser.json());
+
+/* Thiết lập các api config */
+import apiConfig from './routes';
+server.use("/apis", apiConfig);
 
 /* public folder domain/file */
 server.use(express.static("public"));
