@@ -25,6 +25,23 @@ export default {
             }
         }
     },
+    getById: (studentId: number): GetMany => {
+        try {
+            let students:Student[] = JSON.parse(fs.readFileSync(path.join(__dirname,"student.json"), { encoding: 'utf8' }));
+            students = students.filter(value => value.id == studentId);
+            return {
+                status: true,
+                message: "Get student by id ok!",
+                data: students
+            }
+        }catch(err) {
+            return {
+                status: false,
+                message: "Get student by id failed!",
+                data: []
+            }
+        }
+    },
     create: (newStudent: Student) => {
         try {
             let students:Student[] = JSON.parse(fs.readFileSync(path.join(__dirname,"student.json"), { encoding: 'utf8' }));
@@ -57,6 +74,31 @@ export default {
             return {
                 status: false,
                 message: "Delete failed!",
+                data: []
+            }
+        }
+    },
+    update: (studentId:number, patchData:any) => {
+        try {
+            let students:Student[] = JSON.parse(fs.readFileSync(path.join(__dirname,"student.json"), { encoding: 'utf8' }));
+            students = students.map((value, index) => {
+                if (value.id == studentId) {
+                    return {
+                        ...value,
+                        ...patchData
+                    }
+                }
+            });
+            fs.writeFileSync(path.join(__dirname,"student.json"), JSON.stringify(students));
+            return {
+                status: true,
+                message: "Update ok!",
+                data: students
+            }
+        }catch(err) {
+            return {
+                status: false,
+                message: "Update failed!",
                 data: []
             }
         }

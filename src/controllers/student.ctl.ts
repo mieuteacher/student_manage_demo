@@ -17,6 +17,20 @@ export default {
             )
         }
     },
+    getById: (req: Request, res: Response) => {
+        try {
+            let result:GetMany = studentMd.getById(Number(req.params.studentId));
+            return res.status(200).json(
+                result
+            )
+        }catch {
+            return res.status(500).json(
+                {
+                    message: "Failed!"
+                }
+            )
+        }
+    },
     create: (req: Request, res: Response) => {
         req.body.id = Date.now();
         req.body.avatar = "student-images/" + req.file?.filename;
@@ -43,4 +57,17 @@ export default {
             )
         }
     },
+    update: (req: Request, res: Response) => {
+        try {
+            let result:GetMany = studentMd.update(Number(req.params.studentId), req.body);
+            return res.status(200).redirect('/views')
+        }catch {
+            return res.status(500).json(
+                {
+                    message: "Failed!"
+                }
+            )
+        }
+    },
+
 }
