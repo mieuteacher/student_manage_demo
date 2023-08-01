@@ -22,5 +22,5 @@ const studentAvatarUpload = multer({ storage: studentStorage });
 
 router.post("/", studentAvatarUpload.single('avatar'), studentCtl.create)
 router.delete("/:studentId", studentCtl.delete)
-router.patch("/:studentId", studentCtl.update)
+router.put("/:studentId", studentCtl.update)
 export default router;

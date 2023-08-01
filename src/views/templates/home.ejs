@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xin Chào</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<%= mainCssUrl %>">
+    <!-- <link rel="stylesheet" href="<%= mainCssUrl %>"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function changeAvatar(event) {
@@ -26,39 +26,59 @@
                 window.location.reload();
             })
         }
+
+        function closeFormUpdate() {
+            let formElement = document.querySelector(".update_form");
+            formElement.style.display = "none";
+        }
+
+        function openFormUpdate(studentId) {
+            let formElement = document.querySelector(".update_form");
+            let updateFormContentElement = document.querySelector(".update_form_content");
+            formElement.style.display = "flex";
+
+            fetch("http://localhost:3000/apis/v1/students/" + studentId, {
+                method: "get", 
+            })
+            .then(res => res.json())
+            .then(data => {
+                let formControls = updateFormContentElement.querySelectorAll(".form-control");
+                formControls[0].value = data.data[0].name;
+                formControls[1].value = data.data[0].age;
+                formControls[3].value = data.data[0].class;
+                formControls[4].value = data.data[0].id;
+                updateFormContentElement.querySelector("#avatar_preview").src = "http://localhost:3000/" + data.data[0].avatar;
+            })
+        }
+
+        function updateStudent(event, active) {
+            if (JSON.parse(active) == true) {
+                event.preventDefault();
+                let updateFormContentElement = document.querySelector(".update_form_content");
+                let formControls = updateFormContentElement.querySelectorAll(".form-control");
+                let updateData = {
+                    name: formControls[0].value,
+                    age: formControls[1].value,
+                    class: formControls[3].value,
+                }
+                fetch(`http://localhost:3000/apis/v1/students/${formControls[4].value}`, {
+                 method: "put",
+                 body: JSON.stringify(updateData),
+                 headers: {
+                    "Content-Type": "application/json"
+                },
+                }).then(res => {
+                    window.location.reload();
+                })
+            }
+        }
     </script>
-    <style>
-        *{ 
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-}
 
-body {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-}
-
-.body_container {
-    width: 1024px;
-    height: 100%;
-}
-
-.content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-}
-    </style>
 </head>
 <body>
     <section class="body_container">
         <h1 style="text-align: center;">STUDENT MANAGE</h1>
-        <%- include('studentForm', {form: {submitTitle: "Tạo Mới", actionUrl: "http://localhost:3000/apis/v1/students"}}); %>
+        <%- include('studentForm', {form: {active: false, submitTitle: "Tạo Mới", actionUrl: "http://localhost:3000/apis/v1/students"}}); %>
         <table class="table">
             <thead>
               <tr>
@@ -122,10 +142,82 @@ body {
                                 X
                             </div>
                         </td>
+                        <td>
+                            <div onclick="openFormUpdate('<%= student.id %>')" style="cursor: pointer; font-weight: 900; color: red;" class="content">
+                                Update
+                            </div>
+                        </td>
                       </tr>
                 <% }); %>
             </tbody>
           </table>
     </section>
+    <div class="update_form">
+        <div class="update_form_content">   
+            <%- include('studentForm', {form: {active: true, submitTitle: "Cập Nhật", actionUrl: "http://localhost:3000/apis/v1/students"}}); %>
+            <button onclick="closeFormUpdate()" class="btn">X</button>
+        </div>
+    </div>
+    <style>
+        *{ 
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+        }
+
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .body_container {
+            width: 1024px;
+            height: 100%;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+        }
+        
+        .update_form {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            background-color: white;
+            display: none;
+        }
+
+        .update_form_content {
+            width: 400px;
+            height: 500px;
+            border-radius: 10px;
+            border: 1px solid grey;
+            background-color: white;
+            padding: 10px;
+            position: relative;
+        }
+
+        .update_form_content > .btn {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            font-weight: 900;
+            font-size: 20px;
+            color: red;
+            transform: scale(1.2);
+        }
+    </style>
 </body>
 </html>

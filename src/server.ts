@@ -6,6 +6,10 @@ dotenv.config();
 import express from 'express';
 const server = express();
 
+/* Thiết lập cors */
+import cors from 'cors';
+server.use(cors());
+
 /* Thiết lập các views config */
 import viewConfig from './views';
 server.use("/views",viewConfig);
