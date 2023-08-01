@@ -88,6 +88,7 @@ export default {
                         ...patchData
                     }
                 }
+                return value
             });
             fs.writeFileSync(path.join(__dirname,"student.json"), JSON.stringify(students));
             return {
